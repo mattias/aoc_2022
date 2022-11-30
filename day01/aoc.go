@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"strings"
@@ -27,7 +26,7 @@ func getSolutionPart2(input []int) int {
 func parseInput(input string) ([]int, error) {
 	var ints []int
 
-	lines := strings.Split(strings.TrimSpace(input), "\n")
+	lines := strings.Split(strings.TrimSpace(input), "\r\n")
 
 	for _, line := range lines {
 		i, err := strconv.Atoi(line)
@@ -42,7 +41,7 @@ func parseInput(input string) ([]int, error) {
 }
 
 func main() {
-	inputBytes, err := ioutil.ReadFile("input.txt")
+	inputBytes, err := os.ReadFile("input.txt")
 	if err != nil {
 		panic("couldn't read input")
 	}
