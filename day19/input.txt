@@ -1,2 +1,2 @@
-Day 19, Part 1
-Day 19, Part 2
+1337
+42

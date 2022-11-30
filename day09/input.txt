@@ -1,2 +1,2 @@
-Day 9, Part 1
-Day 9, Part 2
+1337
+42

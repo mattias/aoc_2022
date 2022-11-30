@@ -1,2 +1,2 @@
-Day 4, Part 1
-Day 4, Part 2
+1337
+42
