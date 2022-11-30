@@ -1,4 +1,4 @@
-module cygni.se/aoc
+module day08
 
 go 1.19
 

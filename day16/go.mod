@@ -1,4 +1,4 @@
-module cygni.se/aoc
+module day16
 
 go 1.19
 
