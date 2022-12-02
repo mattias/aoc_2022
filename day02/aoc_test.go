@@ -7,8 +7,8 @@ import (
 )
 
 func TestAOC_parseInput(t *testing.T) {
-	input := "1337\r\n42"
-	expectedParsedInput := []int{1337, 42}
+	input := "A Y\r\nB X\r\nC Z"
+	expectedParsedInput := []string{"A Y", "B X", "C Z"}
 
 	actualParsedInput, err := parseInput(input)
 	assert.NoError(t, err)
@@ -16,16 +16,16 @@ func TestAOC_parseInput(t *testing.T) {
 }
 
 func TestAOC_getSolutionPart1(t *testing.T) {
-	input := []int{1337, 42}
-	expectedSolution := 1337 + 42
+	input := []string{"A Y", "B X", "C Z"}
+	expectedSolution := 15
 
 	actualSolution := getSolutionPart1(input)
 	assert.Equal(t, expectedSolution, actualSolution)
 }
 
 func TestAOC_getSolutionPart2(t *testing.T) {
-	input := []int{1337, 42}
-	expectedSolution := 1337 * 42
+	input := []string{"A Y", "B X", "C Z"}
+	expectedSolution := 12
 
 	actualSolution := getSolutionPart2(input)
 	assert.Equal(t, expectedSolution, actualSolution)

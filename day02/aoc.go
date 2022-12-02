@@ -3,41 +3,69 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
-func getSolutionPart1(input []int) int {
-	sum := 0
-	for _, value := range input {
-		sum += value
-	}
-	return sum
+type rockPaperScissorCalculator struct {
+	points map[string][]int
 }
 
-func getSolutionPart2(input []int) int {
-	product := 1
-	for _, value := range input {
-		product *= value
+func newRockProckPaperScissorCalculator() *rockPaperScissorCalculator {
+	rpsc := rockPaperScissorCalculator{
+		points: map[string][]int{
+			"A X": {4, 3},
+			"B X": {1, 1},
+			"C X": {7, 2},
+
+			"A Y": {8, 4},
+			"B Y": {5, 5},
+			"C Y": {2, 6},
+
+			"A Z": {3, 8},
+			"B Z": {9, 9},
+			"C Z": {6, 7},
+		},
 	}
-	return product
+
+	return &rpsc
 }
 
-func parseInput(input string) ([]int, error) {
-	var ints []int
+func (rpsc *rockPaperScissorCalculator) roundScore(round string) []int {
+	return rpsc.points[round]
+}
 
-	lines := strings.Split(strings.TrimSpace(input), "\r\n")
+func getSolutionPart1(rounds []string) int {
+	rpsc := newRockProckPaperScissorCalculator()
 
-	for _, line := range lines {
-		i, err := strconv.Atoi(line)
-		if err != nil {
-			return nil, err
-		}
+	totalScore := 0
 
-		ints = append(ints, i)
+	for _, rawRound := range rounds {
+		round := strings.Split(rawRound, "\r\n")
+		roundScore := rpsc.roundScore(round[0])
+		totalScore += roundScore[0]
 	}
 
-	return ints, nil
+	return totalScore
+}
+
+func getSolutionPart2(rounds []string) int {
+	rpsc := newRockProckPaperScissorCalculator()
+
+	totalScore := 0
+
+	for _, rawRound := range rounds {
+		round := strings.Split(rawRound, "\r\n")
+		roundScore := rpsc.roundScore(round[0])
+		totalScore += roundScore[1]
+	}
+
+	return totalScore
+}
+
+func parseInput(input string) ([]string, error) {
+	rounds := strings.Split(strings.TrimSpace(input), "\r\n")
+
+	return rounds, nil
 }
 
 func main() {
