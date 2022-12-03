@@ -10,10 +10,12 @@ import (
 type rucksack struct {
 	firstCompartment  string
 	secondCompartment string
+	rawRucksack       string
 }
 
 func newRucksuck(rawRucksack string) *rucksack {
 	r := rucksack{}
+	r.rawRucksack = rawRucksack
 	halfRucksack := (len(rawRucksack) / 2)
 	r.firstCompartment = rawRucksack[:halfRucksack]
 	r.secondCompartment = rawRucksack[halfRucksack:]
@@ -53,19 +55,53 @@ func (ro *rucksackOrganizer) priorityOfItemAppearingInBothCompartmentsOfEachRuck
 	var priorities []int
 
 	for _, r := range ro.rucksacks {
-		for _, firstType := range r.firstCompartment {
-			for _, secondType := range r.secondCompartment {
-				if firstType == secondType {
-					points := ro.priorities[rune(firstType)]
-					priorities = append(priorities, points)
-					goto nextRucksack
-				}
-			}
-		}
-	nextRucksack:
+		priorities = append(priorities, ro.findPriorityPoint(r))
 	}
 
 	return priorities
+}
+
+func (ro *rucksackOrganizer) findPriorityPoint(r rucksack) int {
+	for _, firstType := range r.firstCompartment {
+		for _, secondType := range r.secondCompartment {
+			if firstType == secondType {
+				points := ro.priorities[rune(firstType)]
+				return points
+			}
+		}
+	}
+
+	return 0
+}
+
+func (ro *rucksackOrganizer) priorityPointsOfBadgesFromEachGroup() []int {
+	var priorities []int
+
+	for i := 0; i < len(ro.rucksacks); i += 3 {
+
+		priorities = append(priorities, ro.findPriorityPointForBadge(
+			ro.rucksacks[i],
+			ro.rucksacks[i+1],
+			ro.rucksacks[i+2],
+		))
+	}
+
+	return priorities
+}
+
+func (ro *rucksackOrganizer) findPriorityPointForBadge(r1 rucksack, r2 rucksack, r3 rucksack) int {
+	for _, firstType := range r1.rawRucksack {
+		for _, secondType := range r2.rawRucksack {
+			for _, thirdType := range r3.rawRucksack {
+				if firstType == secondType && firstType == thirdType {
+					points := ro.priorities[rune(firstType)]
+					return points
+				}
+			}
+		}
+	}
+
+	return 0
 }
 
 func getSolutionPart1(input []string) int {
@@ -82,7 +118,16 @@ func getSolutionPart1(input []string) int {
 }
 
 func getSolutionPart2(input []string) int {
-	return len(input)
+	ro := newRucksackOrganizer()
+	ro.addRucksacks(input)
+
+	sum := 0
+
+	for _, priority := range ro.priorityPointsOfBadgesFromEachGroup() {
+		sum += priority
+	}
+
+	return sum
 }
 
 func parseInput(input string) []string {

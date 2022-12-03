@@ -45,7 +45,7 @@ func TestAOC_getSolutionPart2(t *testing.T) {
 		"ttgJtRGJQctTZtZT",
 		"CrZsJsPPZsGzwwsLwLmpwMDw",
 	}
-	expectedSolution := 1337 * 42
+	expectedSolution := 70
 
 	actualSolution := getSolutionPart2(input)
 	assert.Equal(t, expectedSolution, actualSolution)
