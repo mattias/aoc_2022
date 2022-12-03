@@ -3,41 +3,24 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
-func getSolutionPart1(input []int) int {
-	sum := 0
-	for _, value := range input {
-		sum += value
-	}
-	return sum
+func getSolutionPart1(input []string) int {
+	return len(input)
 }
 
-func getSolutionPart2(input []int) int {
-	product := 1
-	for _, value := range input {
-		product *= value
-	}
-	return product
+func getSolutionPart2(input []string) int {
+	return len(input)
 }
 
-func parseInput(input string) ([]int, error) {
-	var ints []int
+func parseInput(input string) []string {
+	var rucksacks []string
 
 	lines := strings.Split(strings.TrimSpace(input), "\r\n")
+	rucksacks = append(rucksacks, lines...)
 
-	for _, line := range lines {
-		i, err := strconv.Atoi(line)
-		if err != nil {
-			return nil, err
-		}
-
-		ints = append(ints, i)
-	}
-
-	return ints, nil
+	return rucksacks
 }
 
 func main() {
@@ -46,10 +29,7 @@ func main() {
 		panic("couldn't read input")
 	}
 
-	input, err := parseInput(string(inputBytes))
-	if err != nil {
-		panic("couldn't parse input")
-	}
+	input := parseInput(string(inputBytes))
 
 	fmt.Println("Go")
 	part := os.Getenv("part")
