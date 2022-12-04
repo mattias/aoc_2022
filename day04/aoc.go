@@ -7,37 +7,48 @@ import (
 	"strings"
 )
 
-func getSolutionPart1(input []int) int {
-	sum := 0
-	for _, value := range input {
-		sum += value
-	}
-	return sum
-}
+func getSolutionPart1(sectionAssignmentsForEachPair []string) int {
+	containsFullyWithinAnother := 0
 
-func getSolutionPart2(input []int) int {
-	product := 1
-	for _, value := range input {
-		product *= value
-	}
-	return product
-}
+	for _, sectionAssignmentsForPair := range sectionAssignmentsForEachPair {
+		sectionAssignments := strings.Split(sectionAssignmentsForPair, ",")
+		elf1Sections := strings.Split(sectionAssignments[0], "-")
+		elf2Sections := strings.Split(sectionAssignments[1], "-")
+		elf1FirstSection, _ := strconv.Atoi(elf1Sections[0])
+		elf1SecondSection, _ := strconv.Atoi(elf1Sections[1])
+		elf2FirstSection, _ := strconv.Atoi(elf2Sections[0])
+		elf2SecondSection, _ := strconv.Atoi(elf2Sections[1])
 
-func parseInput(input string) ([]int, error) {
-	var ints []int
-
-	lines := strings.Split(strings.TrimSpace(input), "\r\n")
-
-	for _, line := range lines {
-		i, err := strconv.Atoi(line)
-		if err != nil {
-			return nil, err
+		if (elf1FirstSection <= elf2FirstSection && elf1SecondSection >= elf2SecondSection) || (elf2FirstSection <= elf1FirstSection && elf2SecondSection >= elf1SecondSection) {
+			containsFullyWithinAnother++
 		}
-
-		ints = append(ints, i)
 	}
 
-	return ints, nil
+	return containsFullyWithinAnother
+}
+
+func getSolutionPart2(sectionAssignmentsForEachPair []string) int {
+	containsWithinAnother := 0
+
+	for _, sectionAssignmentsForPair := range sectionAssignmentsForEachPair {
+		sectionAssignments := strings.Split(sectionAssignmentsForPair, ",")
+		elf1Sections := strings.Split(sectionAssignments[0], "-")
+		elf2Sections := strings.Split(sectionAssignments[1], "-")
+		elf1FirstSection, _ := strconv.Atoi(elf1Sections[0])
+		elf1SecondSection, _ := strconv.Atoi(elf1Sections[1])
+		elf2FirstSection, _ := strconv.Atoi(elf2Sections[0])
+		elf2SecondSection, _ := strconv.Atoi(elf2Sections[1])
+
+		if (elf1FirstSection <= elf2FirstSection && elf1SecondSection >= elf2FirstSection) || (elf2FirstSection <= elf1FirstSection && elf2SecondSection >= elf1FirstSection) {
+			containsWithinAnother++
+		}
+	}
+
+	return containsWithinAnother
+}
+
+func parseInput(input string) []string {
+	return strings.Split(strings.TrimSpace(input), "\r\n")
 }
 
 func main() {
@@ -46,10 +57,7 @@ func main() {
 		panic("couldn't read input")
 	}
 
-	input, err := parseInput(string(inputBytes))
-	if err != nil {
-		panic("couldn't parse input")
-	}
+	input := parseInput(string(inputBytes))
 
 	fmt.Println("Go")
 	part := os.Getenv("part")
