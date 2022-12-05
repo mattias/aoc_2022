@@ -3,41 +3,83 @@ package main
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
 
-func getSolutionPart1(input []int) int {
-	sum := 0
-	for _, value := range input {
-		sum += value
-	}
-	return sum
+type supplyStacks struct {
+	stacksOfCrates         map[int][]rune
+	rearrangementProcedure [][]int
 }
 
-func getSolutionPart2(input []int) int {
-	product := 1
-	for _, value := range input {
-		product *= value
+func newSupplyStacks(stacksOfCrates map[int][]rune, rearrangementProcedure [][]int) *supplyStacks {
+	ss := supplyStacks{
+		stacksOfCrates,
+		rearrangementProcedure,
 	}
-	return product
+
+	return &ss
 }
 
-func parseInput(input string) ([]int, error) {
-	var ints []int
+func getSolutionPart1(input *supplyStacks) int {
+	return int(input.stacksOfCrates[0][0])
+}
 
-	lines := strings.Split(strings.TrimSpace(input), "\r\n")
+func getSolutionPart2(input *supplyStacks) int {
+	return int(input.stacksOfCrates[0][0])
+}
+
+func parseStacksOfCrates(input string) *map[int][]rune {
+	stacksOfCrates := make(map[int][]rune)
+
+	lines := strings.Split(input, "\r\n")
+	columns := (len(lines[0]) + 1) / 4
 
 	for _, line := range lines {
-		i, err := strconv.Atoi(line)
-		if err != nil {
-			return nil, err
+		if strings.ContainsAny("1", line) {
+			break
 		}
-
-		ints = append(ints, i)
+		for column := 1; column <= columns; column++ {
+			if line[(column*4)-3] != ' ' {
+				stacksOfCrates[column] = append(stacksOfCrates[column], (rune)(line[(column*4)-3]))
+			}
+		}
 	}
 
-	return ints, nil
+	return &stacksOfCrates
+}
+
+func parseRearrangementProcedure(input string) (*[][]int, error) {
+	rearrangementProcedure := [][]int{}
+	lines := strings.Split(input, "\r\n")
+	re := regexp.MustCompile(`\d+`)
+
+	for _, line := range lines {
+		procedureRow := []int{}
+		for _, num := range re.FindAllString(line, 3) {
+			i, err := strconv.Atoi(num)
+			if err != nil {
+				return nil, err
+			}
+			procedureRow = append(procedureRow, i)
+		}
+		rearrangementProcedure = append(rearrangementProcedure, procedureRow)
+	}
+
+	return &rearrangementProcedure, nil
+}
+
+func parseInput(input string) (*supplyStacks, error) {
+	parts := strings.Split(input, "\r\n\r\n")
+
+	stacksOfCrates := parseStacksOfCrates(parts[0])
+	rearrangementProcedure, err := parseRearrangementProcedure(parts[1])
+	if err != nil {
+		return nil, err
+	}
+
+	return newSupplyStacks(*stacksOfCrates, *rearrangementProcedure), nil
 }
 
 func main() {
