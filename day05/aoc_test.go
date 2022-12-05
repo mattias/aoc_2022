@@ -9,10 +9,10 @@ import (
 func TestAOC_parseInput(t *testing.T) {
 	input := "    [D]    \r\n[N] [C]    \r\n[Z] [M] [P]\r\n 1   2   3 \r\n\r\nmove 1 from 2 to 1\r\nmove 3 from 1 to 3\r\nmove 2 from 2 to 1\r\nmove 1 from 1 to 2"
 
-	expectedStacksOfCrates := map[int][]rune{
-		1: {'N', 'Z'},
-		2: {'D', 'C', 'M'},
-		3: {'P'},
+	expectedStacksOfCrates := map[int]string{
+		1: "NZ",
+		2: "DCM",
+		3: "P",
 	}
 
 	expectedRearrangementProcedure := [][]int{
@@ -30,10 +30,10 @@ func TestAOC_parseInput(t *testing.T) {
 }
 
 func TestAOC_getSolutionPart1(t *testing.T) {
-	stacksOfCrates := map[int][]rune{
-		1: {'N', 'Z'},
-		2: {'D', 'C', 'M'},
-		3: {'P'},
+	stacksOfCrates := map[int]string{
+		1: "NZ",
+		2: "DCM",
+		3: "P",
 	}
 
 	rearrangementProcedure := [][]int{
@@ -44,6 +44,7 @@ func TestAOC_getSolutionPart1(t *testing.T) {
 	}
 
 	input := newSupplyStacks(stacksOfCrates, rearrangementProcedure)
+	input.stackColumns = 3
 	expectedSolution := "CMZ"
 
 	actualSolution := getSolutionPart1(input)
@@ -51,10 +52,10 @@ func TestAOC_getSolutionPart1(t *testing.T) {
 }
 
 func TestAOC_getSolutionPart2(t *testing.T) {
-	stacksOfCrates := map[int][]rune{
-		1: {'N', 'Z'},
-		2: {'D', 'C', 'M'},
-		3: {'P'},
+	stacksOfCrates := map[int]string{
+		1: "NZ",
+		2: "DCM",
+		3: "P",
 	}
 
 	rearrangementProcedure := [][]int{
@@ -65,7 +66,8 @@ func TestAOC_getSolutionPart2(t *testing.T) {
 	}
 
 	input := newSupplyStacks(stacksOfCrates, rearrangementProcedure)
-	expectedSolution := "CMZ"
+	input.stackColumns = 3
+	expectedSolution := "MCD"
 
 	actualSolution := getSolutionPart2(input)
 	assert.Equal(t, expectedSolution, actualSolution)

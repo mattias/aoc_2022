@@ -9,29 +9,68 @@ import (
 )
 
 type supplyStacks struct {
-	stacksOfCrates         map[int][]rune
+	stackColumns           int
+	stacksOfCrates         map[int]string
 	rearrangementProcedure [][]int
 }
 
-func newSupplyStacks(stacksOfCrates map[int][]rune, rearrangementProcedure [][]int) *supplyStacks {
-	ss := supplyStacks{
-		stacksOfCrates,
-		rearrangementProcedure,
-	}
+func newSupplyStacks(stacksOfCrates map[int]string, rearrangementProcedure [][]int) *supplyStacks {
+	ss := supplyStacks{}
+	ss.stacksOfCrates = stacksOfCrates
+	ss.rearrangementProcedure = rearrangementProcedure
+	ss.stackColumns = 0
 
 	return &ss
 }
 
-func getSolutionPart1(input *supplyStacks) int {
-	return int(input.stacksOfCrates[0][0])
+func reverseString(str string) (result string) {
+	for _, v := range str {
+		result = string(v) + result
+	}
+
+	return
 }
 
-func getSolutionPart2(input *supplyStacks) int {
-	return int(input.stacksOfCrates[0][0])
+func (ss *supplyStacks) runRearrangementProcedure() {
+	var sliceSize int
+	for _, procedure := range ss.rearrangementProcedure {
+		sliceSize = procedure[0]
+		from := reverseString(ss.stacksOfCrates[procedure[1]][:sliceSize])
+		ss.stacksOfCrates[procedure[1]] = ss.stacksOfCrates[procedure[1]][sliceSize:]
+		ss.stacksOfCrates[procedure[2]] = from + ss.stacksOfCrates[procedure[2]]
+	}
 }
 
-func parseStacksOfCrates(input string) *map[int][]rune {
-	stacksOfCrates := make(map[int][]rune)
+func (ss *supplyStacks) runRearrangementProcedureV2() {
+	var sliceSize int
+	for _, procedure := range ss.rearrangementProcedure {
+		sliceSize = procedure[0]
+		from := ss.stacksOfCrates[procedure[1]][:sliceSize]
+		ss.stacksOfCrates[procedure[1]] = ss.stacksOfCrates[procedure[1]][sliceSize:]
+		ss.stacksOfCrates[procedure[2]] = from + ss.stacksOfCrates[procedure[2]]
+	}
+}
+
+func (ss *supplyStacks) cratesAtTop() string {
+	cratesAtTop := ""
+	for i := 1; i <= ss.stackColumns; i++ {
+		cratesAtTop += (string)(ss.stacksOfCrates[i][0])
+	}
+	return cratesAtTop
+}
+
+func getSolutionPart1(input *supplyStacks) string {
+	input.runRearrangementProcedure()
+	return input.cratesAtTop()
+}
+
+func getSolutionPart2(input *supplyStacks) string {
+	input.runRearrangementProcedureV2()
+	return input.cratesAtTop()
+}
+
+func parseStacksOfCrates(input string) (*map[int]string, int) {
+	stacksOfCrates := make(map[int]string)
 
 	lines := strings.Split(input, "\r\n")
 	columns := (len(lines[0]) + 1) / 4
@@ -42,12 +81,12 @@ func parseStacksOfCrates(input string) *map[int][]rune {
 		}
 		for column := 1; column <= columns; column++ {
 			if line[(column*4)-3] != ' ' {
-				stacksOfCrates[column] = append(stacksOfCrates[column], (rune)(line[(column*4)-3]))
+				stacksOfCrates[column] = stacksOfCrates[column] + (string)(line[(column*4)-3])
 			}
 		}
 	}
 
-	return &stacksOfCrates
+	return &stacksOfCrates, columns
 }
 
 func parseRearrangementProcedure(input string) (*[][]int, error) {
@@ -73,13 +112,16 @@ func parseRearrangementProcedure(input string) (*[][]int, error) {
 func parseInput(input string) (*supplyStacks, error) {
 	parts := strings.Split(input, "\r\n\r\n")
 
-	stacksOfCrates := parseStacksOfCrates(parts[0])
+	stacksOfCrates, columns := parseStacksOfCrates(parts[0])
 	rearrangementProcedure, err := parseRearrangementProcedure(parts[1])
 	if err != nil {
 		return nil, err
 	}
 
-	return newSupplyStacks(*stacksOfCrates, *rearrangementProcedure), nil
+	ss := newSupplyStacks(*stacksOfCrates, *rearrangementProcedure)
+	ss.stackColumns = columns
+
+	return ss, nil
 }
 
 func main() {
