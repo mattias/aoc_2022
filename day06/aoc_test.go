@@ -6,27 +6,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAOC_parseInput(t *testing.T) {
-	input := "1337\r\n42"
-	expectedParsedInput := []int{1337, 42}
-
-	actualParsedInput, err := parseInput(input)
-	assert.NoError(t, err)
-	assert.Equal(t, expectedParsedInput, actualParsedInput)
-}
-
 func TestAOC_getSolutionPart1(t *testing.T) {
-	input := []int{1337, 42}
-	expectedSolution := 1337 + 42
+	input := "mjqjpqmgbljsphdztnvjfqwrcgsmlb"
+	expectedSolution := 7
 
-	actualSolution := getSolutionPart1(input)
+	actualSolution := getSolutionPart1And2(input, 4)
 	assert.Equal(t, expectedSolution, actualSolution)
 }
 
 func TestAOC_getSolutionPart2(t *testing.T) {
-	input := []int{1337, 42}
-	expectedSolution := 1337 * 42
+	input := "mjqjpqmgbljsphdztnvjfqwrcgsmlb"
+	expectedSolution := 19
 
-	actualSolution := getSolutionPart2(input)
+	actualSolution := getSolutionPart1And2(input, 14)
 	assert.Equal(t, expectedSolution, actualSolution)
 }
